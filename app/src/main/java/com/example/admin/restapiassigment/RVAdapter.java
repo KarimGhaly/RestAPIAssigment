@@ -23,6 +23,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
         this.reposClassList = reposClassList;
     }
 
+    public void FilterList(List<ReposClass> newReposClassList)
+    {
+        reposClassList=newReposClassList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public RVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -62,7 +68,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ViewHolder> {
             txtRepoUpdated = (TextView) itemView.findViewById(R.id.txtRepoUpdated);
         }
 
-
-
     }
+
 }

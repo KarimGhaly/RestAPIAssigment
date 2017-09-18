@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+
+
 
 import com.example.admin.restapiassigment.model.repos.ReposClass;
 import com.google.gson.Gson;
@@ -24,6 +27,7 @@ import okhttp3.Response;
 public class ListingRepositories extends AppCompatActivity {
 
     private static final String TAG = "ListingActivity";
+    private List<ReposClass> reposClassList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,7 @@ public class ListingRepositories extends AppCompatActivity {
         setContentView(R.layout.activity_listing_repositories);
         Intent intent = getIntent();
         final String BaseURL = intent.getStringExtra("ReposKEY");
+
 
         new AsyncTask<Void,Void,List<ReposClass>>()
         {
@@ -41,7 +46,7 @@ public class ListingRepositories extends AppCompatActivity {
                 Request request = new Request.Builder().url(BaseURL).build();
                 Response response = null;
                 String responseMSG = null;
-                List<ReposClass> reposClassList = new ArrayList<>();
+                reposClassList = new ArrayList<>();
                 try {
                     response = client.newCall(request).execute();
                     responseMSG = response.body().string();
@@ -69,11 +74,33 @@ public class ListingRepositories extends AppCompatActivity {
     public  void ShowRepos(List<ReposClass> reposClasses)
     {
         RecyclerView RVList = (RecyclerView) findViewById(R.id.RVList);
-        RVAdapter rvAdapter = new RVAdapter(reposClasses);
+        final RVAdapter rvAdapter = new RVAdapter(reposClasses);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
         RVList.setAdapter(rvAdapter);
         RVList.setLayoutManager(layoutManager);
         RVList.setItemAnimator(itemAnimator);
+        SearchView searchView = (SearchView) findViewById(R.id.search_bar);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                List<ReposClass> newreposClassList = new ArrayList<ReposClass>();
+                for(ReposClass RC: reposClassList)
+                {
+                    if(RC.getName().contains(newText))
+                    {
+                        newreposClassList.add(RC);
+                    }
+                }
+                rvAdapter.FilterList(newreposClassList);
+                return true;
+            }
+        });
     }
+
 }
