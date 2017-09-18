@@ -52,12 +52,7 @@ public class ListingRepositories extends AppCompatActivity {
                     responseMSG = response.body().string();
                     Gson gson = new Gson();
                     ReposClass[] reposClassArray = gson.fromJson(responseMSG,ReposClass[].class);
-                    for(int i =0;i<reposClassArray.length;i++)
-                    {
-                        ReposClass r = reposClassArray[i];
-                        reposClassList.add(r);
-                    }
-
+                    reposClassList = Arrays.asList(reposClassArray);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
