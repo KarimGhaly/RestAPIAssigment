@@ -92,7 +92,7 @@ public class ListingRepositories extends AppCompatActivity {
                 List<ReposClass> newreposClassList = new ArrayList<ReposClass>();
                 for(ReposClass RC: reposClassList)
                 {
-                    if(RC.getName().contains(newText))
+                    if(RC.getName().toLowerCase().contains(newText.toLowerCase()))
                     {
                         newreposClassList.add(RC);
                     }
